@@ -57,16 +57,23 @@ parseJSONdata <- function(fileName, numComponents=1, fileOutSuffixes=c("output")
         cat(paste('\n',attr(isArrayValid,"err"),'\n',sep=""))
         return() 
       } else {
-        jsonLineIsArray <- TRUE
+        #jsonLineIsArray <- TRUE
         currResults <- currResultsArray
       }
+    }
+    
+    # check if JSON string is array
+    containsMultJsonObjects <- grepl("},{",currResults,fixed=TRUE)
+    currResultsSplit <- strsplit(currResults,split="")
+    if (currResultsSplit[[1]][1] == "[" && containsMultJsonObjects) {
+      jsonLineIsArray <- TRUE 
     }
     
     # convert JSON string to data frame list
     currResultsList <- fromJSON(currResults, flatten = TRUE)
     
     # convert data frame list to data frame
-    if (!jsonLineIsArray) {
+    if (!jsonLineIsArray || (class(currResultsList) == "data.frame")) {
       # if this line of JSON is not an array then convert it to a data frame
       currResultsCSV <- as.data.frame(currResultsList)
       # check to see if any of the columns are lists, and if so, convert them to character (otherwise write.csv will fail)
