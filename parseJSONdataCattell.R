@@ -1,4 +1,4 @@
-parseCattellJSONdata <- function(fileName, fileOutSuffixes=c("responses","interaction")) {
+parseJSONdataCattell <- function(fileName, fileOutSuffixes=c("responses","interaction")) {
   
   # Inputs:
   # fileName: (string) path to a single txt file containing the Cattell data downloaded from JATOS (JSON format)
@@ -7,7 +7,7 @@ parseCattellJSONdata <- function(fileName, fileOutSuffixes=c("responses","intera
   
   # Output:
   #  A set of files containing the data in csv format, saved in the current directory, named 
-  #  as the original file name + the suffix, e.g. "my_data.txt" -> my_data_view_history.csv" etc.
+  #  as the original file name + the suffix, e.g. "my_data.txt" -> my_data_responses.csv" etc.
   # 1 file per participant for:
   # - responses
   # - response box interactions
