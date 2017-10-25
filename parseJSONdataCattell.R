@@ -1,9 +1,13 @@
-parseJSONdataCattell <- function(fileName, fileOutSuffixes=c("responses","interaction")) {
+parseJSONdataCattell <- function(fileName, fileOutSuffixes=c("responses","interaction"), isJsonStr=FALSE, id=NULL) {
   
   # Inputs:
-  # fileName: (string) path to a single txt file containing the Cattell data downloaded from JATOS (JSON format)
+  # fileName: (string) either
+  #  1. valid JSON string containing data from a single Cattell component (line of JSON)
+  #  2. path to a txt file containing data from a single Cattell component (line of JSON)
   # fileOutSuffixes: (array of strings) suffix(es) to be added to the file name to form the new file names for the 
   #  resulting CSV files. Suffixes must be given in the order: responses, interaction
+  # isJsonStr: (boolean) is 'fileName' a JSON string rather than a file name? (default is FALSE)
+  # id: (string) if isJsonStr = TRUE, then what should the identifier be for the output files? (no default value)
   
   # Output:
   #  A set of files containing the data in csv format, saved in the current directory, named 
@@ -17,12 +21,21 @@ parseJSONdataCattell <- function(fileName, fileOutSuffixes=c("responses","intera
   require(jsonlite)
 
   expectedLines <- 1
-  expectedSuffixes <- 3
+  expectedSuffixes <- 2
   metaDataColumns <- c("test_number","test_segment","trial_type","trial_index","time_elapsed","internal_node_id","rt")
   
-  dataFileCon <- file(paste(fileName, ".txt", sep=""), open = "r")
-  rawData <- readLines(dataFileCon, warn = FALSE)
-  close(dataFileCon)
+  if (!(isJsonStr)) {
+    dataFileCon <- file(paste(fileName, ".txt", sep=""), open = "r")
+    rawData <- readLines(dataFileCon, warn = FALSE)
+    close(dataFileCon)
+  } else {
+    if (is.null(id) || (!(is.character(id)))) {
+      cat("\nWarning: when isJsonStr is TRUE, a valid string must be given for the 'id' argument.")
+      return()
+    }
+    rawData <- fileName
+    fileName <- id
+  }
   
   # expecting one line of JSON
   if (length(rawData) != 1) {
