@@ -8,7 +8,7 @@
 library(jsonlite)
 
 # load the parsing function (use full path to this file if it's not in the current working directory)
-source(parseJSONdata.R)
+source("parseJSONdata.R")
 
 ## Example 1
 
@@ -25,10 +25,10 @@ parseJSONdata(fileToParse1)
 # parse a file containing data from mulitple JATOS components
 # now we need to specify the number of components it contains (numComponents) and output file suffixes (fileOutSuffixes)
 
-fileToParse2 <- "results_20170811141734"
-numComponents <- 8
+fileToParse2 <- "results_20171206114302"
+numComponents <- 9
 fileOutSuffixes <- c("mobile","id","info_consent","audio_calibration","headphones_test",
-                     "tone_test","shift_test","end")
+                     "tone_test","shift_test","debrief_questions","end")
 parseJSONdata(fileToParse2, numComponents, fileOutSuffixes)
 
 
