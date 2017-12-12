@@ -1,4 +1,4 @@
-parseJSONdata <- function(fileName, numComponents=1, fileOutSuffixes=c("output")) {
+parseJSONdata <- function(fileName, numComponents=1, fileOutSuffixes=c("output"), isJsonStr=FALSE, id=NULL) {
   # Inputs:
   # fileName: (string) path to a single txt file containing the data downloaded from JATOS (JSON format)
   # numComponents: (num) number of JATOS components that the data corresponds to. This will be the same as the number of lines
@@ -16,9 +16,18 @@ parseJSONdata <- function(fileName, numComponents=1, fileOutSuffixes=c("output")
   
   require(jsonlite)
   
-  dataFileCon <- file(paste(fileName, ".txt", sep=""), open = "r")
-  rawData <- readLines(dataFileCon, warn = FALSE)
-  close(dataFileCon)
+  if (!(isJsonStr)) {
+    dataFileCon <- file(paste(fileName, ".txt", sep=""), open = "r")
+    rawData <- readLines(dataFileCon, warn = FALSE)
+    close(dataFileCon)
+  } else {
+    if (is.null(id) || (!(is.character(id)))) {
+      cat("\nWarning: when isJsonStr is TRUE, a valid string must be given for the 'id' argument.")
+      return()
+    }
+    rawData <- fileName
+    fileName <- id
+  }
   
   # expecting one line of JSON for each component
   if (length(rawData) != numComponents) {
